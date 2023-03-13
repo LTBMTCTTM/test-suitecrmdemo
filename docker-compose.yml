@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    working_dir: /python-docker
+    volumes:
+      - ./:/python-docker
+    ports:
+      - "9000:9000"
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=quotes
+      - MYSQL_ROOT_PASSWORD=mauFJcuf5dhRMQrjj
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  db:
+    driver: local
