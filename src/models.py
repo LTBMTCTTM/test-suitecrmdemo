@@ -15,11 +15,9 @@ class Leads(Base):
     last_name = Column(String(120))
 
 
-# Tạo engine để kết nối tới MySQL
 SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:mauFJcuf5dhRMQrjj@172.21.0.1/quotes"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-# Tạo Session để thao tác với database
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
