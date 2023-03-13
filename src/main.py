@@ -39,7 +39,7 @@ def fetch_lead_list() -> list:
         'method': 'get_entry_list',
         'input_type': 'JSON',
         'response_type': 'JSON',
-        'rest_data': f'{{"session": "{session_id}", "module_name": "Leads", "query": "", "order_by": "", "offset": 0, "select_fields": ["phone_work", "first_name", "last_name"], "link_name_to_fields_array": [], "max_results": 10, "deleted": 0}}'
+        'rest_data': f'{{"session": "{session_id}", "module_name": "Leads", "query": "", "order_by": "", "offset": 0, "select_fields": ["phone_work", "first_name", "last_name"], "link_name_to_fields_array": [], "max_results": 200, "deleted": 0}}'
     })
 
     leads = response.json()['entry_list']
