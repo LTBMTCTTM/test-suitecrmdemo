@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 import uvicorn
 from sqlalchemy.orm import Session
-from models import Leads, get_db
+from models import Leads, get_db, BitcoinPrice
 import requests
 
 app = FastAPI(title="Suite crm demo")
@@ -53,6 +53,33 @@ def fetch_lead_list() -> list:
         lead_list.append(lead_obj)
 
     return lead_list
+
+
+def fetch_bitcoin_prices():
+    import datetime
+    response = requests.get("https://api.coindesk.com/v1/bpi/currentprice/USD.json")
+    if response.ok:
+        data = response.json()
+        price = data["bpi"]["USD"]["rate_float"]
+        timestamp = datetime.datetime.now()
+        return price, timestamp
+    else:
+        return None, None
+
+
+@app.get("/bitcoin-prices")
+async def fetch_and_store_bitcoin_prices(
+        db: Session = Depends(get_db),
+):
+    price, timestamp = fetch_bitcoin_prices()
+    if price is not None:
+        db_price = BitcoinPrice(price=price, timestamp=timestamp)
+        db.add(db_price)
+        db.commit()
+        db.refresh(db_price)
+        return db_price
+    else:
+        return {"error": "Failed to fetch Bitcoin-USD prices"}
 
 
 @app.post("/leads/")
